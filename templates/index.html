@@ -1,0 +1,248 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>California Housing | AI Price Prediction</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body>
+
+    <main class="container">
+
+        <!-- HERO SECTION -->
+        <header class="hero">
+            <div class="hero-content">
+
+                <div class="brand">
+                    <div class="brand-icon">⌂</div>
+
+                    <div>
+                        <h1>California Housing</h1>
+                        <p class="subtitle">
+                            House Price Prediction System
+                        </p>
+                    </div>
+                </div>
+
+                <p class="hero-description">
+                    Discover the estimated value of a California home
+                    using Machine Learning.
+                </p>
+
+                <div class="hero-tag">
+                    ✦ ML POWERED PREDICTION
+                </div>
+
+            </div>
+        </header>
+
+        <!-- FORM CARD -->
+        <section class="card">
+
+            <div class="section-heading">
+
+                <div class="heading-icon">🏡</div>
+
+                <div class="heading-text">
+                    <h2>Enter House Details</h2>
+                    <p>
+                        Provide the property information to estimate
+                        its market value.
+                    </p>
+                </div>
+
+                <div class="status">
+                    <span class="status-dot"></span>
+                    Model Ready
+                </div>
+
+            </div>
+
+            <form method="POST"
+                  onsubmit="return validateForm()">
+
+                <div class="form-grid">
+
+                    <div class="form-group">
+                        <div class="field-icon blue">💰</div>
+                        <div class="field-content">
+                            <label for="MedInc">Median Income</label>
+                            <input id="MedInc" type="number"
+                                step="any" min="0"
+                                name="MedInc"
+                                placeholder="Example: 3.5"
+                                value="{{ values.get('MedInc', '') }}"
+                                required>
+                            <small>Median household income</small>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="field-icon purple">📅</div>
+                        <div class="field-content">
+                            <label for="HouseAge">House Age</label>
+                            <input id="HouseAge" type="number"
+                                step="any" min="0"
+                                name="HouseAge"
+                                placeholder="Example: 25"
+                                value="{{ values.get('HouseAge', '') }}"
+                                required>
+                            <small>Median age of the houses</small>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="field-icon green">🛏️</div>
+                        <div class="field-content">
+                            <label for="AveRooms">Average Rooms</label>
+                            <input id="AveRooms" type="number"
+                                step="any" min="0"
+                                name="AveRooms"
+                                placeholder="Example: 5"
+                                value="{{ values.get('AveRooms', '') }}"
+                                required>
+                            <small>Average rooms per household</small>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="field-icon pink">🛌</div>
+                        <div class="field-content">
+                            <label for="AveBedrms">Average Bedrooms</label>
+                            <input id="AveBedrms" type="number"
+                                step="any" min="0"
+                                name="AveBedrms"
+                                placeholder="Example: 1"
+                                value="{{ values.get('AveBedrms', '') }}"
+                                required>
+                            <small>Average bedrooms per household</small>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="field-icon orange">👥</div>
+                        <div class="field-content">
+                            <label for="Population">Population</label>
+                            <input id="Population" type="number"
+                                step="any" min="0"
+                                name="Population"
+                                placeholder="Example: 1000"
+                                value="{{ values.get('Population', '') }}"
+                                required>
+                            <small>Block group population</small>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="field-icon cyan">👤</div>
+                        <div class="field-content">
+                            <label for="AveOccup">Average Occupancy</label>
+                            <input id="AveOccup" type="number"
+                                step="any" min="0"
+                                name="AveOccup"
+                                placeholder="Example: 3"
+                                value="{{ values.get('AveOccup', '') }}"
+                                required>
+                            <small>Average household occupancy</small>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="field-icon indigo">📍</div>
+                        <div class="field-content">
+                            <label for="Latitude">Latitude</label>
+                            <input id="Latitude" type="number"
+                                step="any" min="-90" max="90"
+                                name="Latitude"
+                                placeholder="Example: 34.05"
+                                value="{{ values.get('Latitude', '') }}"
+                                required>
+                            <small>Property latitude coordinate</small>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="field-icon coral">🗺️</div>
+                        <div class="field-content">
+                            <label for="Longitude">Longitude</label>
+                            <input id="Longitude" type="number"
+                                step="any" min="-180" max="180"
+                                name="Longitude"
+                                placeholder="Example: -118.24"
+                                value="{{ values.get('Longitude', '') }}"
+                                required>
+                            <small>Property longitude coordinate</small>
+                        </div>
+                    </div>
+
+                </div>
+
+                <button class="predict-button" type="submit">
+                    <span>↗</span>
+                    Predict House Price
+                    <span class="button-arrow">→</span>
+                </button>
+
+                <p class="form-note">
+                    🔒 Your inputs are used to generate a local prediction.
+                </p>
+
+            </form>
+
+            {% if prediction is not none %}
+
+            <section class="result success" aria-live="polite">
+
+                <div class="result-icon">✓</div>
+
+                <p class="result-label">YOUR ESTIMATED HOUSE VALUE</p>
+
+                <h2 class="price">
+                    ${{ "{:,.2f}".format(prediction) }}
+                </h2>
+
+                <p class="result-description">
+                    Estimated value based on the property details provided.
+                </p>
+
+                <p class="disclaimer">
+                    This is a model estimate, not a guaranteed market price.
+                </p>
+
+                <a class="reset-link" href="{{ url_for('home') }}">
+                    ↻ Make another prediction
+                </a>
+
+            </section>
+
+            {% endif %}
+
+            {% if error %}
+
+            <section class="result error" aria-live="polite">
+                <h3>⚠ Please check your inputs</h3>
+                <p>{{ error }}</p>
+            </section>
+
+            {% endif %}
+
+        </section>
+
+        <!-- FOOTER -->
+        <footer>
+            <p>California Housing Price Prediction</p>
+            <span>Built with Flask · Python · Scikit-learn</span>
+        </footer>
+
+    </main>
+
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+
+</body>
+</html>
